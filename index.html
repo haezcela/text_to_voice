@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text to Voice</title>
+</head>
+<body>
+    <div id="console"></div>
+    <button id="btn">Record</button>
+    
+
+
+    <script src="assets/js/artyom.window.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+
+        const artyom = new Artyom();
+        document.getElementById("btn").addEventListener("click", function(){
+            artyom.say("Please speak");
+        }, false);
+        
+
+    artyom.addCommands([
+        {
+        indexes: ["Hello", "hi", "hey"],
+        action: i => {
+            artyom.say("Hello user!, What can I do for you?");
+
+            }
+        },
+        {
+        indexes: ["Can you understand what I'm saying"],
+        action: i => {
+            artyom.say("Ofcourse, because the programmer taught me how to.");
+
+            }
+        },
+        {
+            indexes: ["Shutdown"],
+            action: (i, wildcard) => {
+                artyom.fatality().then(() => {
+                console.log("Artyom successfully stopped");
+             });
+            }
+        }
+    ]);
+
+        artyom.initialize({
+            lang: "en-GB",
+            continuous: true,
+            soundex: true,
+            debug: true,
+            executionKeyword: "and do it now",
+            listen:true
+
+        }).then( () => {
+            console.log("Artyom has been successfully initialized");
+            $('console').append("Please speak to execute command");
+        }).catch(err => {
+            console.log("Artyom coudn't be initialized", err);
+            $('console').append("Artyom coudn't be initialized", err);
+        });
+
+    </script>
+</body>
+</html>
