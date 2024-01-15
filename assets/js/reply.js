@@ -1,11 +1,14 @@
+// Initialize Artyom
 const artyom = new Artyom();
 
+// Get DOM elements for mic button and mic icon
 var micButton = document.getElementById("btn");
 var micIcon = document.getElementById("micIcon");
 
-// Set initial state
+// Set initial state for recording
 var isRecording = false;
 
+// Event listener for mic button click
 micButton.addEventListener("click", function () {
   // Toggle recording state
   isRecording = !isRecording;
@@ -13,8 +16,9 @@ micButton.addEventListener("click", function () {
   // Change button text and icon based on the recording state
   if (isRecording) {
     micButton.innerHTML = "OFF MIC";
-    // Change the button icon to the recording GIF (replace 'recording.gif' with your actual file path)
     micIcon.src = "assets/icons/microphone-active.gif"; // Replace with the path to the image when the microphone is on
+
+    // Initialize Artyom for speech recognition
     artyom.say("Please speak");
     artyom
       .initialize({
@@ -30,18 +34,20 @@ micButton.addEventListener("click", function () {
         $("console").append("Please speak to execute command");
       })
       .catch((err) => {
-        console.log("Artyom coudn't be initialized", err);
-        $("console").append("Artyom coudn't be initialized", err);
+        console.log("Artyom couldn't be initialized", err);
+        $("console").append("Artyom couldn't be initialized", err);
       });
   } else {
     micButton.innerHTML = "Open Mic";
-    // Change the button icon back to the initial state (replace 'initial.gif' with your actual file path)
     micIcon.src = "assets/icons/no-microphone.gif"; // Replace with the path to the initial image
+
+    // Turn off microphone and Artyom
     artyom.say("microphone off");
     artyom.fatality();
   }
 });
 
+// Add custom voice commands
 artyom.addCommands([
   {
     indexes: ["Hello", "hi", "hey"],
@@ -52,12 +58,13 @@ artyom.addCommands([
   {
     indexes: ["Can you understand what I'm saying"],
     action: (i) => {
-      artyom.say("Ofcourse, because the programmer taught me how to.");
+      artyom.say("Of course, because the programmer taught me how to.");
     },
   },
   {
     indexes: ["Shutdown"],
     action: (i, wildcard) => {
+      // Stop Artyom when the shutdown command is recognized
       artyom.fatality().then(() => {
         console.log("Artyom successfully stopped");
       });
@@ -65,7 +72,7 @@ artyom.addCommands([
   },
 ]);
 
+// Handle the case when no command is matched
 artyom.when("NOT_COMMAND_MATCHED", function () {
-  // Handle the case when no command is matched
   artyom.say("I'm sorry, I don't have an answer for that.");
 });

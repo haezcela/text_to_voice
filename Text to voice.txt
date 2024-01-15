@@ -1,1 +1,30 @@
 Text to voice 
+
+TO DO 1/15/24
+- if mic is off, stop getting input from the user
+- Limit the time of listening if 5 seconds no input the mic will auto off
+- If artyom has no reply for the user say "I'm sorry I don't have an answer for that.
+
+artyom.addCommands([
+  {
+    indexes: ["Hello", "hi", "hey"],
+    action: (i) => {
+      artyom.say("Hello user! What can I do for you?");
+    },
+  },
+  {
+    indexes: ["Can you understand what I'm saying"],
+    action: (i) => {
+      artyom.say("Of course, because the programmer taught me how to.");
+    },
+  },
+  {
+    indexes: ["Shutdown"],
+    action: (i, wildcard) => {
+      stopListening();
+      artyom.fatality().then(() => {
+        console.log("Artyom successfully stopped");
+      });
+    },
+  },
+]);
