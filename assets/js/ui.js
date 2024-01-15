@@ -1,21 +1,65 @@
-var micButton = document.getElementById("btn");
-var micIcon = document.getElementById("micIcon");
+// ui.js
+export let isRecording = false;
+let listeningTimeout;
+let artyomInstance; // Declare a variable to hold the Artyom instance
 
-// Set initial state
-var isRecording = false;
+export function setArtyomInstance(artyom) {
+  artyomInstance = artyom;
+}
 
-micButton.addEventListener("click", function () {
-  // Toggle recording state
+export function toggleMicrophoneState() {
   isRecording = !isRecording;
+  updateMicrophoneUI();
+}
 
-  // Change button text and icon based on the recording state
+export function updateMicrophoneUI() {
+  const micButton = document.getElementById("btn");
+  const micIcon = document.getElementById("micIcon");
+
   if (isRecording) {
     micButton.innerHTML = "OFF MIC";
-    // Change the button icon to the recording GIF (replace 'recording.gif' with your actual file path)
-    micIcon.src = "assets/icons/microphone-active.gif"; // Replace with the path to the image when the microphone is on
+    micIcon.src = "assets/icons/microphone-active.gif";
+    startListening();
   } else {
     micButton.innerHTML = "Open Mic";
-    // Change the button icon back to the initial state (replace 'initial.gif' with your actual file path)
-    micIcon.src = "assets/icons/no-microphone.gif"; // Replace with the path to the initial image
+    micIcon.src = "assets/icons/no-microphone.gif";
+    stopListening();
   }
-});
+}
+
+export function startListening() {
+  if (!artyomInstance) {
+    console.error(
+      "Artyom instance is not set. Call setArtyomInstance(artyom) first."
+    );
+    return;
+  }
+
+  isRecording = true;
+  clearTimeout(listeningTimeout);
+
+  artyomInstance.say("Please speak");
+  artyomInstance
+    .listen()
+    .then(({ text, isFinal }) => {
+      if (isFinal && isRecording) {
+        handleUserInput(text);
+      }
+    })
+    .catch((error) => {
+      console.error("Artyom listen error:", error);
+    });
+
+  listeningTimeout = setTimeout(() => {
+    stopListening();
+  }, 5000);
+}
+
+export function stopListening() {
+  isRecording = false;
+  clearTimeout(listeningTimeout);
+  artyomInstance.fatality();
+  console.log("Artyom stopped listening");
+}
+
+// Other functions remain unchanged
