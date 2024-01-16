@@ -47,23 +47,33 @@ micButton.addEventListener("click", function () {
   }
 });
 
+// Get the container for recognized input
+var recognizedInputContainer = document.getElementById("recognizedInput");
+
 // Add custom voice commands
 artyom.addCommands([
   {
     indexes: ["Hello", "hi", "hey"],
     action: (i) => {
-      artyom.say("Hello user!, What can I do for you?");
+      var command = "Hello user!, What can I do for you?";
+      displayRecognizedInput(command);
+      artyom.say(command);
     },
   },
   {
     indexes: ["Can you understand what I'm saying"],
     action: (i) => {
-      artyom.say("Of course, because the programmer taught me how to.");
+      var command = "Of course, because the programmer taught me how to.";
+      displayRecognizedInput(command);
+      artyom.say(command);
     },
   },
   {
     indexes: ["Shutdown"],
     action: (i, wildcard) => {
+      var command = "Shutdown";
+      displayRecognizedInput(command);
+
       // Stop Artyom when the shutdown command is recognized
       artyom.fatality().then(() => {
         console.log("Artyom successfully stopped");
@@ -74,5 +84,12 @@ artyom.addCommands([
 
 // Handle the case when no command is matched
 artyom.when("NOT_COMMAND_MATCHED", function () {
-  artyom.say("I'm sorry, I don't have an answer for that.");
+  var command = "I'm sorry, I don't have an answer for that.";
+  displayRecognizedInput(command);
+  artyom.say(command);
 });
+
+// Function to display recognized input in the container
+function displayRecognizedInput(command) {
+  recognizedInputContainer.innerHTML = "AI: " + command;
+}
