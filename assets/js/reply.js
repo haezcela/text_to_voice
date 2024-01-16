@@ -48,7 +48,7 @@ micButton.addEventListener("click", function () {
 });
 
 // Get the container for recognized input
-var recognizedInputContainer = document.getElementById("recognizedInput");
+var recognizedInputContainer = document.getElementById("answer");
 
 // Add custom voice commands
 artyom.addCommands([
@@ -56,7 +56,7 @@ artyom.addCommands([
     indexes: ["Hello", "hi", "hey"],
     action: (i) => {
       var command = "Hello user!, What can I do for you?";
-      displayRecognizedInput(command);
+      displayAnswer(command);
       artyom.say(command);
     },
   },
@@ -64,7 +64,7 @@ artyom.addCommands([
     indexes: ["Can you understand what I'm saying"],
     action: (i) => {
       var command = "Of course, because the programmer taught me how to.";
-      displayRecognizedInput(command);
+      displayAnswer(command);
       artyom.say(command);
     },
   },
@@ -72,7 +72,7 @@ artyom.addCommands([
     indexes: ["Shutdown"],
     action: (i, wildcard) => {
       var command = "Shutdown";
-      displayRecognizedInput(command);
+      displayAnswer(command);
 
       // Stop Artyom when the shutdown command is recognized
       artyom.fatality().then(() => {
@@ -85,11 +85,11 @@ artyom.addCommands([
 // Handle the case when no command is matched
 artyom.when("NOT_COMMAND_MATCHED", function () {
   var command = "I'm sorry, I don't have an answer for that.";
-  displayRecognizedInput(command);
+  displayAnswer(command);
   artyom.say(command);
 });
 
 // Function to display recognized input in the container
-function displayRecognizedInput(command) {
+function displayAnswer(command) {
   recognizedInputContainer.innerHTML = "AI: " + command;
 }
